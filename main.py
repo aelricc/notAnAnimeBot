@@ -46,7 +46,7 @@ async def anime(ctx, *args):
         embed.add_field(name = "⌛ Status", value = anime.status, inline=True)
         embed.add_field(name = "🗂️ Type", value = anime.type, inline=True)
         embed.add_field(name = "📅 Release", value = anime.dates, inline=False)
-        if(anime.status != "movie"):
+        if(anime.type != "movie"):
             embed.add_field(name = "💿 Total Episodes", value = anime.episodes, inline=True)
         if(anime.status == "finished" or anime.status == "current"):
             embed.add_field(name = "⭐ Average Rating", value = anime.rating, inline=True)

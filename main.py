@@ -1,9 +1,9 @@
-# This example requires the 'message_content' intent.
 import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import discord
 from pulls import Anime, Manga
+from helper import createEmbed
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
@@ -35,23 +35,8 @@ async def anime(ctx, *args):
         await ctx.send("Please provide an anime title! (e.g. !anime Fruits Basket)")
     else:
         anime = Anime(arguments)
-
-        embed = discord.Embed(
-            color=discord.Color.brand_green(),
-            description=anime.synopsis,
-            title=anime.title,
-            url = anime.url
-        )
-        embed.set_thumbnail(url = anime.image)
-        embed.add_field(name = "⌛ Status", value = anime.status, inline=True)
-        embed.add_field(name = "🗂️ Type", value = anime.type, inline=True)
-        embed.add_field(name = "📌 Genres", value = anime.genres, inline=False)
-        embed.add_field(name = "📅 Release", value = anime.dates, inline=False)
-        if ("Airing" in anime.status):
-            if (anime.type != "Movie"): embed.add_field(name = "💿 Total Episodes", value = anime.episodes, inline=True)
-            embed.add_field(name = "⭐ Average Rating", value = anime.rating, inline=True)
-            embed.add_field(name = "🏆 Rank", value = anime.rank, inline=True)
-        
+        embed = createEmbed(anime)
+        print(f"Found anime for query {arguments}")
         await ctx.send(embed=embed)
 
 @bot.command()
@@ -61,24 +46,8 @@ async def manga(ctx, *args):
         await ctx.send("Please provide an manga title! (e.g. !manga Fruits Basket)")
     else:
         manga = Manga(arguments)
-
-        embed = discord.Embed(
-            color=discord.Color.brand_green(),
-            description=manga.synopsis,
-            title=manga.title,
-            url = manga.url
-        )
-        embed.set_thumbnail(url = manga.image)
-        embed.add_field(name = "⌛ Status", value = manga.status, inline=True)
-        embed.add_field(name = "🗂️ Type", value = manga.type, inline=True)
-        embed.add_field(name = "📌 Genres", value = manga.genres, inline=False)
-        embed.add_field(name = "📅 Release", value = manga.dates, inline=False)
-        if ("Publishing" or "Finished" in manga.status):
-            if (manga.status == "Finished"): embed.add_field(name = "💿 Total Chapters", value = manga.chapters, inline=True)
-            embed.add_field(name = "⭐ Average Rating", value = manga.rating, inline=True)
-            embed.add_field(name = "🏆 Rank", value = manga.rank, inline=True)
-
-
+        embed = createEmbed(anime)
+        print(f"Found manga for query {arguments}")
         await ctx.send(embed=embed)
     
 bot.run(token)

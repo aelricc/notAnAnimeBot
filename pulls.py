@@ -1,45 +1,30 @@
 
 import requests, json
 
-k_url = "https://kitsu.io/api/edge"
-headers = {
-    'Accept': 'application/vnd.api+json',
-    'Content-Type': 'application/vnd.api+json'
-}
+url = "https://api.jikan.moe/v4/"
 
-class Anime:
-    def __init__(self, title):
-        self.data = (requests.get(k_url + "/anime?filter[text]=" + title, headers=headers)).json()
-        self.title = str(self.data["data"][0]["attributes"]["canonicalTitle"])
-        self.image = str(self.data["data"][0]["attributes"]["posterImage"]["medium"])
-        self.synopsis = str(self.data["data"][0]["attributes"]["synopsis"])
-        self.url = "https://kitsu.app/anime/" + str(self.data["data"][0]["id"])
-        self.type = str(self.data["data"][0]["attributes"]["subtype"])
-        self.status = str(self.data["data"][0]["attributes"]["status"])
-        if self.type != "movie":
-            self.dates = str(self.data["data"][0]["attributes"]["startDate"]) + " to " + str(self.data["data"][0]["attributes"]["endDate"])
-            self.episodes = str(self.data["data"][0]["attributes"]["episodeCount"])
-        else:
-            self.dates = str(self.data["data"][0]["attributes"]["startDate"])
-        if (self.status == "current" or self.status == "finished"):
-            self.rating = str(self.data["data"][0]["attributes"]["averageRating"]) + "/100"
-            self.rank = str(self.data["data"][0]["attributes"]["popularityRank"])
+class Request():
+    def __init__(self, query, type):
+        self.data = ((requests.get(f"{url}{type}/?q={query}&limit=1")).json())["data"][0]
+        self.title = str(self.data["title"])
+        self.image = str(self.data["images"]["jpg"]["large_image_url"])
+        self.synopsis = str(self.data["synopsis"])
+        self.url = str(self.data["url"])
+        self.type = str(self.data["type"])
+        self.status = str(self.data["status"])
+        self.rating = str(self.data["score"])
+        self.rank = str(self.data["rank"])
+        genres = [d.get("name") for d in self.data["genres"] if "name" in d]
+        self.genres = ", ".join(genres)
 
+class Anime(Request):
+    def __init__(self, query):
+        super().__init__(query, "anime")
+        self.dates = str(self.data["aired"]["string"])
+        self.episodes = str(self.data["episodes"])
 
-class Manga:
-    def __init__(self, title):
-        self.data = (requests.get(k_url + "/manga?filter[text]=" + title, headers=headers)).json()
-        self.title = str(self.data["data"][0]["attributes"]["canonicalTitle"])
-        self.image = str(self.data["data"][0]["attributes"]["posterImage"]["medium"])
-        self.synopsis = str(self.data["data"][0]["attributes"]["synopsis"])
-        self.url = "https://kitsu.app/manga/" + str(self.data["data"][0]["id"])
-        self.type = str(self.data["data"][0]["attributes"]["subtype"])
-        self.status = str(self.data["data"][0]["attributes"]["status"])
-        if self.status == "finished":
-            self.dates = str(self.data["data"][0]["attributes"]["startDate"]) + " to " + str(self.data["data"][0]["attributes"]["endDate"])
-            self.chapters = str(self.data["data"][0]["attributes"]["chapterCount"])
-        else:
-            self.dates = str(self.data["data"][0]["attributes"]["startDate"])
-        if (self.status == "current" or self.status == "finished"):
-            self.rating = str(self.data["data"][0]["attributes"]["averageRating"]) + "/100"
-            self.rank = str(self.data["data"][0]["attributes"]["popularityRank"])
+class Manga(Request):
+    def __init__(self, query):
+        super().__init__(query, "manga")
+        self.dates = str(self.data["published"]["string"])
+        self.chapters = str(self.data["chapters"])

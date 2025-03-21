@@ -45,13 +45,13 @@ async def anime(ctx, *args):
         embed.set_thumbnail(url = anime.image)
         embed.add_field(name = "⌛ Status", value = anime.status, inline=True)
         embed.add_field(name = "🗂️ Type", value = anime.type, inline=True)
+        embed.add_field(name = "📌 Genres", value = anime.genres, inline=False)
         embed.add_field(name = "📅 Release", value = anime.dates, inline=False)
-        if(anime.type != "movie"):
-            embed.add_field(name = "💿 Total Episodes", value = anime.episodes, inline=True)
-        if(anime.status == "finished" or anime.status == "current"):
+        if ("Airing" in anime.status):
+            if (anime.type != "Movie"): embed.add_field(name = "💿 Total Episodes", value = anime.episodes, inline=True)
             embed.add_field(name = "⭐ Average Rating", value = anime.rating, inline=True)
-            embed.add_field(name = "🏆 Rank", value = anime.rank, inline=False)
-
+            embed.add_field(name = "🏆 Rank", value = anime.rank, inline=True)
+        
         await ctx.send(embed=embed)
 
 @bot.command()
@@ -71,14 +71,12 @@ async def manga(ctx, *args):
         embed.set_thumbnail(url = manga.image)
         embed.add_field(name = "⌛ Status", value = manga.status, inline=True)
         embed.add_field(name = "🗂️ Type", value = manga.type, inline=True)
+        embed.add_field(name = "📌 Genres", value = manga.genres, inline=False)
         embed.add_field(name = "📅 Release", value = manga.dates, inline=False)
-        if(manga.status == "finished"):
-            embed.add_field(name = "📚 Total Chapters", value = manga.chapters, inline=True)
+        if ("Publishing" or "Finished" in manga.status):
+            if (manga.status == "Finished"): embed.add_field(name = "💿 Total Chapters", value = manga.chapters, inline=True)
             embed.add_field(name = "⭐ Average Rating", value = manga.rating, inline=True)
-            embed.add_field(name = "🏆 Rank", value = manga.rank, inline=False)
-        elif(manga.status == "current"):
-            embed.add_field(name = "⭐ Average Rating", value = manga.rating, inline=True)
-            embed.add_field(name = "🏆 Rank", value = manga.rank, inline=False)
+            embed.add_field(name = "🏆 Rank", value = manga.rank, inline=True)
 
 
         await ctx.send(embed=embed)

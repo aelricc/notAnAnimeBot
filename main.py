@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from discord.ext import commands
 import discord
-from pulls import Anime, Manga
+from pulls import Anime, Manga, Movie, TV
 from helper import createEmbed
 
 load_dotenv()
@@ -34,10 +34,13 @@ async def anime(ctx, *args):
     if(len(args) == 0):
         await ctx.send("Please provide an anime title! (e.g. !anime Fruits Basket)")
     else:
-        anime = Anime(arguments)
-        embed = createEmbed(anime)
-        print(f"Found anime for query {arguments}")
-        await ctx.send(embed=embed)
+        try: 
+            anime = Anime(arguments)
+            embed = createEmbed(anime)
+            print(f"Found anime for query {arguments}")
+            await ctx.send(embed=embed)
+        except IndexError:
+            await ctx.send("sorry, i couldn't find that anime :(")
 
 @bot.command()
 async def manga(ctx, *args):
@@ -45,9 +48,40 @@ async def manga(ctx, *args):
     if(len(args) == 0):
         await ctx.send("Please provide an manga title! (e.g. !manga Fruits Basket)")
     else:
-        manga = Manga(arguments)
-        embed = createEmbed(anime)
-        print(f"Found manga for query {arguments}")
-        await ctx.send(embed=embed)
+        try: 
+            manga = Manga(arguments)
+            embed = createEmbed(manga)
+            print(f"Found manga for query {arguments}")
+            await ctx.send(embed=embed)
+        except IndexError:
+            await ctx.send("sorry, i couldn't find that manga :(")
+
+@bot.command()
+async def movie(ctx, *args):
+    arguments = ' '.join(args)
+    if(len(args) == 0):
+        await ctx.send("Please provide a movie title! (e.g. !movie Inception)")
+    else:
+        try:
+            movie = Movie(arguments)
+            embed = createEmbed(movie)
+            print(f"Found movie for query {arguments}")
+            await ctx.send(embed=embed)
+        except IndexError:
+            await ctx.send("sorry, i couldn't find that movie :(")
+
+@bot.command()
+async def tv(ctx, *args):
+    arguments = ' '.join(args)
+    if(len(args) == 0):
+        await ctx.send("Please provide a TV show title! (e.g. !tv Inception)")
+    else:
+        try: 
+            tv = TV(arguments)
+            embed = createEmbed(tv)
+            print(f"Found TV for query {arguments}")
+            await ctx.send(embed=embed)
+        except IndexError:
+            await ctx.send("sorry, i couldn't find that show :(")
     
 bot.run(token)

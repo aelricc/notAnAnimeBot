@@ -1,7 +1,7 @@
 from pulls import Anime, Manga
 import discord
 
-#Need to clean this up it's so bad
+#todo clean this up it's so bad
 def createEmbed(request):
     embed = discord.Embed(
         color=discord.Color.brand_green(),

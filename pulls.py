@@ -1,11 +1,11 @@
-
+import os
 import requests, json
 
 jurl = "https://api.jikan.moe/v4/"
 murl = "https://api.themoviedb.org/3/"
 mheaders = {
     "accept": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5MzJkOTA2ZDM2YTU5NzQ3YTdkMjg2YzQ2ODM2ZWFjMiIsIm5iZiI6MTc0MjUyMTIyMy43NTMsInN1YiI6IjY3ZGNjMzg3NWY5Nzc4MzZhYjdhNTZmNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.T8LeK-VhBpUAngAHeCfxdItHIZJsuXOCTLcZB1nwxCI"
+    "Authorization": "Bearer " + os.getenv("TMDB_TOKEN")
 }
 
 class malRequest():

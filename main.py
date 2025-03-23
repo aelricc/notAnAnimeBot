@@ -29,6 +29,12 @@ async def apologize(ctx, arg1, arg2):
     await ctx.send("im sorry " + str(arg2) + " :(")
 
 @bot.command()
+async def execute(ctx, *args):
+    arguments = '%20'.join(args)
+    if(len(args) != 0):
+        await ctx.send("Command recieved. Executing orders.")
+
+@bot.command()
 async def anime(ctx, *args):
     arguments = '%20'.join(args)
     if(len(args) == 0):
@@ -69,7 +75,7 @@ async def movie(ctx, *args):
             await ctx.send(embed=embed)
         except IndexError:
             await ctx.send("sorry, i couldn't find that movie :(")
-
+        
 @bot.command()
 async def tv(ctx, *args):
     arguments = ' '.join(args)
@@ -83,5 +89,5 @@ async def tv(ctx, *args):
             await ctx.send(embed=embed)
         except IndexError:
             await ctx.send("sorry, i couldn't find that show :(")
-    
+
 bot.run(token)

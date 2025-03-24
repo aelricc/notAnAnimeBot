@@ -1,11 +1,14 @@
 import os
+from dotenv import load_dotenv
 import requests, json
 
+load_dotenv()
 jurl = "https://api.jikan.moe/v4/"
 murl = "https://api.themoviedb.org/3/"
+mtoken = f"Bearer {os.getenv('TMDB_KEY')}"
 mheaders = {
     "accept": "application/json",
-    "Authorization": "Bearer " + os.getenv("TMDB_TOKEN")
+    "Authorization": mtoken
 }
 
 class malRequest():
@@ -38,8 +41,11 @@ class Manga(malRequest):
 class tmdbRequest():
     def __init__(self, query, type):
         response = requests.get(f"{murl}search/{type}?query={query}&include_adult=false&language=en-US&page=1", headers=mheaders)
-        self.data = requests.get(f"{murl}{type}/{response.json()["results"][0]["id"]}?language=en-US", headers = mheaders).json()
-        self.image = str(f"https://image.tmdb.org/t/p/original{self.data["poster_path"]}")
+        print(response.status_code)
+        id = response.json()["results"][0]["id"]
+        self.data = requests.get(f"{murl}{type}/{id}?language=en-US", headers = mheaders).json()
+        poster = self.data["poster_path"]
+        self.image = str(f"https://image.tmdb.org/t/p/original{poster}")
         self.synopsis = str(self.data["overview"])
         self.url = str(self.data["homepage"])
         self.status = str(self.data["status"])
@@ -61,5 +67,7 @@ class TV(tmdbRequest):
         self.title = str(self.data["name"])
         self.episodes = str(self.data["number_of_episodes"])
         self.seasons = str(self.data["number_of_seasons"])
-        self.dates = str(f"{self.data["first_air_date"]} to {self.data["last_air_date"]}")
+        fd = self.data["first_air_date"]
+        ld = self.data["last_air_date"]
+        self.dates = str(f"{fd} to {ld}")
         self.type = str(self.data["type"])

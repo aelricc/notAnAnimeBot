@@ -2,7 +2,7 @@ from pulls import Anime, Manga
 import discord
 
 #todo clean this up it's so bad
-def createEmbed(request):
+def createMediaEmbed(request):
     embed = discord.Embed(
         color=discord.Color.brand_green(),
         description=request.synopsis,

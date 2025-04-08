@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import discord
 from pulls import Anime, Manga, Movie, TV
-from helper import createEmbed
+from helper import createMediaEmbed
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
@@ -35,6 +35,19 @@ async def execute(ctx, *args):
         await ctx.send("Command recieved. Executing orders.")
 
 @bot.command()
+async def commands(ctx, *args):
+    embed = discord.Embed(
+        color=discord.Color.brand_green(),
+        description="!anime <title>\n"
+        "!manga <title>\n" +
+        "!movie <title>\n" +
+        "!tv <title>\n" +
+        "!apologize <name>",
+        title="Available Commands"
+    )
+    await ctx.send(embed=embed)
+
+@bot.command()
 async def anime(ctx, *args):
     arguments = '%20'.join(args)
     if(len(args) == 0):
@@ -42,7 +55,7 @@ async def anime(ctx, *args):
     else:
         try: 
             anime = Anime(arguments)
-            embed = createEmbed(anime)
+            embed = createMediaEmbed(anime)
             print(f"Found anime for query {arguments}")
             await ctx.send(embed=embed)
         except IndexError:
@@ -56,7 +69,7 @@ async def manga(ctx, *args):
     else:
         try: 
             manga = Manga(arguments)
-            embed = createEmbed(manga)
+            embed = createMediaEmbed(manga)
             print(f"Found manga for query {arguments}")
             await ctx.send(embed=embed)
         except IndexError:
@@ -70,7 +83,7 @@ async def movie(ctx, *args):
     else:
         try:
             movie = Movie(arguments)
-            embed = createEmbed(movie)
+            embed = createMediaEmbed(movie)
             print(f"Found movie for query {arguments}")
             await ctx.send(embed=embed)
         except IndexError:
@@ -84,7 +97,7 @@ async def tv(ctx, *args):
     else:
         try: 
             tv = TV(arguments)
-            embed = createEmbed(tv)
+            embed = createMediaEmbed(tv)
             print(f"Found TV for query {arguments}")
             await ctx.send(embed=embed)
         except IndexError:
